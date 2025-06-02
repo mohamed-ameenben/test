@@ -1,6 +1,14 @@
 [
   {
+    "firstName": "mohamed",
+    "lastName": "ameen",
+    "email": "benhaddimohamed44@gmail.com",
+    "password": "$2b$10$WLHPnNOA0xmNCE9pi6sUT.GCAojPLQhJMnHktueH70qCHJ5tWfcPO"
+  },
+  {
+    "firstName": "mohamed",
+    "lastName": "ameen",
     "email": "mohamedameenbenhaddi@gmail.com",
-    "password": "$2b$10$/EdZdhuKALsYtdT/Tq5IsO.h6NuRDbPChpiaU5Vi1XL7efu6ZLhme"
+    "password": "$2b$10$DSVytTASfEIzKHAxfKA5e.YKpfaxk9bJQujpPGx3QW1N4Mj96XGT2"
   }
 ]
