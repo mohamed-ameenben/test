@@ -4,27 +4,32 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
+    if (password !== confirmPassword) {
+      setError("Passwords do not match")
+      return
+    }
     setLoading(true)
     try {
-      const res = await fetch("/api/login", {
+      const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       })
-      if (!res.ok) throw new Error("Login failed")
-      router.push("/") // Redirect to home page on success
+      if (!res.ok) throw new Error("Registration failed")
+      router.push("/login")
     } catch (err) {
-      setError("Incorrect email or password")
+      setError("An error occurred during registration. Try another email.")
     } finally {
       setLoading(false)
     }
@@ -33,9 +38,10 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-brand-dark">
       <form
-        onSubmit={handleLogin}
+        onSubmit={handleRegister}
         className="bg-white/90 shadow-xl rounded-2xl p-8 space-y-6 w-full max-w-sm border border-brand-yellow"
       >
+        {/* Back Button */}
         <button
           type="button"
           onClick={() => router.push("/")}
@@ -43,8 +49,8 @@ export default function LoginPage() {
         >
           <span className="text-lg">←</span> Back
         </button>
-        <h1 className="text-3xl font-extrabold text-center mb-2 text-brand-dark drop-shadow">
-          Login
+        <h1 className="text-3xl font-extrabold mb-2 text-center text-brand-dark drop-shadow">
+          Sign Up
         </h1>
         <div className="flex flex-col gap-3">
           <input
@@ -64,6 +70,14 @@ export default function LoginPage() {
             onChange={e => setPassword(e.target.value)}
             required
           />
+          <input
+            type="password"
+            placeholder="Confirm password"
+            className="w-full border border-brand-yellow focus:border-brand-blue p-2 rounded-lg outline-none transition"
+            value={confirmPassword}
+            onChange={e => setConfirmPassword(e.target.value)}
+            required
+          />
         </div>
         {error && <div className="text-red-500 text-xs text-center">{error}</div>}
         <Button
@@ -71,15 +85,15 @@ export default function LoginPage() {
           className="w-full bg-brand-yellow text-brand-dark font-semibold py-2 rounded-lg hover:bg-brand-blue hover:text-white transition"
           disabled={loading}
         >
-          {loading ? "Connecting..." : "Login"}
+          {loading ? "Signing up..." : "Sign Up"}
         </Button>
         <div className="text-center text-sm text-gray-500 pt-3">
-          Don&apos;t have an account?{" "}
+          Already have an account?{" "}
           <a
-            href="/register"
+            href="/login"
             className="text-brand-blue hover:text-brand-yellow font-medium underline transition"
           >
-            Sign Up
+            Log in
           </a>
         </div>
       </form>
