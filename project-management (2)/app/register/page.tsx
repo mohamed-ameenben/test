@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 
 export default function RegisterPage() {
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -24,7 +26,7 @@ export default function RegisterPage() {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ firstName, lastName, email, password }),
       })
       if (!res.ok) throw new Error("Registration failed")
       router.push("/login")
@@ -54,13 +56,29 @@ export default function RegisterPage() {
         </h1>
         <div className="flex flex-col gap-3">
           <input
+            type="text"
+            placeholder="First Name"
+            className="w-full border border-brand-yellow focus:border-brand-blue p-2 rounded-lg outline-none transition"
+            value={firstName}
+            onChange={e => setFirstName(e.target.value)}
+            required
+            autoFocus
+          />
+          <input
+            type="text"
+            placeholder="Last Name"
+            className="w-full border border-brand-yellow focus:border-brand-blue p-2 rounded-lg outline-none transition"
+            value={lastName}
+            onChange={e => setLastName(e.target.value)}
+            required
+          />
+          <input
             type="email"
             placeholder="Email"
             className="w-full border border-brand-yellow focus:border-brand-blue p-2 rounded-lg outline-none transition"
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
-            autoFocus
           />
           <input
             type="password"

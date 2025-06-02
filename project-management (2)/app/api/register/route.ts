@@ -6,14 +6,16 @@ import bcrypt from "bcryptjs"
 const USERS_FILE = path.resolve(process.cwd(), "users.json")
 
 type User = {
+  firstName: string
+  lastName: string
   email: string
   password: string // hashé !
 }
 
 export async function POST(req: NextRequest) {
-  const { email, password } = await req.json()
+  const { firstName, lastName, email, password } = await req.json()
 
-  if (!email || !password) {
+  if (!firstName || !lastName || !email || !password) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 })
   }
 
@@ -28,7 +30,7 @@ export async function POST(req: NextRequest) {
 
   // Hash du mot de passe !
   const hashedPassword = await bcrypt.hash(password, 10)
-  users.push({ email, password: hashedPassword })
+  users.push({ firstName, lastName, email, password: hashedPassword })
 
   fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2))
 
