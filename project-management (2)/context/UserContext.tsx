@@ -1,9 +1,22 @@
-import React, { createContext, useContext, useState } from "react";
+"use client";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
-export const UserContext = createContext(null);
+// Typage utilisateur
+type User = {
+  firstName: string;
+  lastName: string;
+  email: string;
+} | null;
 
-export function UserProvider({ children }) {
-  const [user, setUser] = useState(null); // { firstName, lastName, email }
+type UserContextType = {
+  user: User;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
+};
+
+const UserContext = createContext<UserContextType | undefined>(undefined);
+
+export function UserProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User>(null);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
@@ -13,5 +26,9 @@ export function UserProvider({ children }) {
 }
 
 export function useUser() {
-  return useContext(UserContext);
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error("useUser must be used within a UserProvider");
+  }
+  return context;
 }

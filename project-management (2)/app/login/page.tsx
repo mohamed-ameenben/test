@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { useUser } from "../../context/UserContext"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -10,6 +11,7 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const { setUser } = useUser()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -22,6 +24,13 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       })
       if (!res.ok) throw new Error("Login failed")
+      const data = await res.json()
+      // On suppose que l'API retourne aussi le prénom et le nom
+      setUser({
+        firstName: data.user.firstName,
+        lastName: data.user.lastName,
+        email: data.user.email,
+      })
       router.push("/") // Redirect to home page on success
     } catch (err) {
       setError("Incorrect email or password")
@@ -74,7 +83,7 @@ export default function LoginPage() {
           {loading ? "Connecting..." : "Login"}
         </Button>
         <div className="text-center text-sm text-gray-500 pt-3">
-          Don&apos;t have an account?{" "}
+          Don't have an account?{" "}
           <a
             href="/register"
             className="text-brand-blue hover:text-brand-yellow font-medium underline transition"
